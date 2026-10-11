@@ -5,15 +5,17 @@
  *
  * Loads public portfolio data from Supabase.
  *
- * Loading strategy:
+ * Strategy:
  *
- * 1. Critical:
+ * 1. Show local preview instantly
+ *
+ * 2. Load critical database data:
  *    - profile
  *    - site settings
  *    - projects
  *    - project images
  *
- * 2. Secondary:
+ * 3. Load secondary data:
  *    - skills
  *    - experience
  *    - education
@@ -21,11 +23,7 @@
  *    - services
  *    - social links
  *
- * 3. Background:
- *    - approved comments
- *
- * Performance goal:
- * Make the first screen visible faster.
+ * 4. Load comments in background
  *
  * ======================================================
  */
@@ -40,19 +38,22 @@ import { readPublic, readSingleton } from "../lib/api.js";
 
 export function usePortfolio() {
   const [state, setState] = useState({
-    data: configured ? null : preview,
+    // Show preview immediately
 
-    loading: configured,
+    data: preview,
+
+    loading: false,
 
     error: "",
   });
 
   useEffect(() => {
+    // If Supabase is not configured,
+    // keep showing preview.
+
     if (!configured) return;
 
     let active = true;
-
-    const controller = new AbortController();
 
     async function loadPortfolio() {
       try {
@@ -76,29 +77,19 @@ export function usePortfolio() {
         if (!active) return;
 
         const criticalData = {
-          profile,
+          ...preview,
 
-          site_settings: settings,
+          profile: profile || preview.profile,
+
+          site_settings: settings || preview.site_settings,
 
           ...Object.fromEntries(
-            criticalTables.map((name, index) => [name, criticalResults[index]]),
+            criticalTables.map((name, index) => [
+              name,
+
+              criticalResults[index] || preview[name],
+            ]),
           ),
-
-          // placeholders
-
-          skills: [],
-
-          experience: [],
-
-          education: [],
-
-          certificates: [],
-
-          services: [],
-
-          social_links: [],
-
-          comments: [],
         };
 
         setState({
@@ -141,7 +132,11 @@ export function usePortfolio() {
             ...previous.data,
 
             ...Object.fromEntries(
-              secondaryTables.map((name, index) => [name, secondaryResults[index]]),
+              secondaryTables.map((name, index) => [
+                name,
+
+                secondaryResults[index] || preview[name],
+              ]),
             ),
           },
         }));
@@ -166,15 +161,17 @@ export function usePortfolio() {
             data: {
               ...previous.data,
 
-              comments: comments || [],
+              comments: comments || preview.comments,
             },
           }));
         }
       } catch (error) {
         if (!active) return;
 
+        // Keep preview instead of blank page
+
         setState({
-          data: null,
+          data: preview,
 
           loading: false,
 
@@ -187,8 +184,6 @@ export function usePortfolio() {
 
     return () => {
       active = false;
-
-      controller.abort();
     };
   }, []);
 
