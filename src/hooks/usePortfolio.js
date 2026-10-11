@@ -1,78 +1,194 @@
 /**
+ * ======================================================
  * PUBLIC PORTFOLIO DATA HOOK
- * No Supabase config: show local preview data (not production records).
- * With Supabase: fetch profile, site settings, and published collections.
- * Only approved visitor comments are fetched through a database RPC.
+ * ======================================================
+ *
+ * Loads public portfolio data from Supabase.
+ *
+ * Loading strategy:
+ *
+ * 1. Critical:
+ *    - profile
+ *    - site settings
+ *    - projects
+ *    - project images
+ *
+ * 2. Secondary:
+ *    - skills
+ *    - experience
+ *    - education
+ *    - certificates
+ *    - services
+ *    - social links
+ *
+ * 3. Background:
+ *    - approved comments
+ *
+ * Performance goal:
+ * Make the first screen visible faster.
+ *
+ * ======================================================
  */
+
 import { useEffect, useState } from "react";
+
 import { configured, supabase } from "../lib/supabase.js";
+
 import { preview } from "../data/preview.js";
+
 import { readPublic, readSingleton } from "../lib/api.js";
 
 export function usePortfolio() {
   const [state, setState] = useState({
     data: configured ? null : preview,
+
     loading: configured,
+
     error: "",
   });
 
   useEffect(() => {
-    // In preview mode there is no live database to query.
     if (!configured) return;
 
-    let alive = true;
+    let active = true;
 
-    async function load() {
+    const controller = new AbortController();
+
+    async function loadPortfolio() {
       try {
-        // Independent collections can load at the same time.
-        const names = [
-          "skills",
-          "projects",
-          "project_images",
-          "experience",
-          "education",
-          "certificates",
-          "services",
-          "social_links",
-        ];
-        const [profile, settings, ...results] = await Promise.all([
+        /*
+        ==========================================
+        STEP 1
+        CRITICAL DATA
+        ==========================================
+        */
+
+        const criticalTables = ["projects", "project_images"];
+
+        const [profile, settings, ...criticalResults] = await Promise.all([
           readSingleton("profiles"),
+
           readSingleton("site_settings"),
-          ...names.map(readPublic),
+
+          ...criticalTables.map(readPublic),
         ]);
 
-        // Use the public-safe RPC, NOT the private comments table.
-        let comments = [];
-        const { data: approved, error: rpcError } = await supabase.rpc(
-          "get_approved_comments",
-        );
-        if (!rpcError) comments = approved || [];
+        if (!active) return;
 
-        // Convert the array of collection results into a named data object.
-        if (alive) {
-          setState({
+        const criticalData = {
+          profile,
+
+          site_settings: settings,
+
+          ...Object.fromEntries(
+            criticalTables.map((name, index) => [name, criticalResults[index]]),
+          ),
+
+          // placeholders
+
+          skills: [],
+
+          experience: [],
+
+          education: [],
+
+          certificates: [],
+
+          services: [],
+
+          social_links: [],
+
+          comments: [],
+        };
+
+        setState({
+          data: criticalData,
+
+          loading: false,
+
+          error: "",
+        });
+
+        /*
+        ==========================================
+        STEP 2
+        SECONDARY DATA
+        ==========================================
+        */
+
+        const secondaryTables = [
+          "skills",
+
+          "experience",
+
+          "education",
+
+          "certificates",
+
+          "services",
+
+          "social_links",
+        ];
+
+        const secondaryResults = await Promise.all(secondaryTables.map(readPublic));
+
+        if (!active) return;
+
+        setState((previous) => ({
+          ...previous,
+
+          data: {
+            ...previous.data,
+
+            ...Object.fromEntries(
+              secondaryTables.map((name, index) => [name, secondaryResults[index]]),
+            ),
+          },
+        }));
+
+        /*
+        ==========================================
+        STEP 3
+        COMMENTS
+        ==========================================
+        */
+
+        const {
+          data: comments,
+
+          error,
+        } = await supabase.rpc("get_approved_comments");
+
+        if (!error && active) {
+          setState((previous) => ({
+            ...previous,
+
             data: {
-              profile,
-              site_settings: settings,
-              comments,
-              ...Object.fromEntries(names.map((name, i) => [name, results[i]])),
+              ...previous.data,
+
+              comments: comments || [],
             },
-            loading: false,
-            error: "",
-          });
+          }));
         }
       } catch (error) {
-        if (alive) {
-          setState({ data: null, loading: false, error: error.message });
-        }
+        if (!active) return;
+
+        setState({
+          data: null,
+
+          loading: false,
+
+          error: error.message || "Failed loading portfolio.",
+        });
       }
     }
 
-    load();
+    loadPortfolio();
 
-    // Avoid setting React state if the component is unmounted mid-request.
     return () => {
-      alive = false;
+      active = false;
+
+      controller.abort();
     };
   }, []);
 
