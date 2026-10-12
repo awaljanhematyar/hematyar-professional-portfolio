@@ -19,6 +19,7 @@ import {
   SiNodedotjs,
   SiPostgresql,
   SiVite,
+  SiFirebase,
 } from "react-icons/si";
 import { Code2 } from "lucide-react";
 
@@ -50,14 +51,14 @@ const skillIcons = {
   postgresql: [SiPostgresql, "#4169E1"],
 
   vite: [SiVite, "#A78BFA"],
+
+  firebase: [SiFirebase, "#FFCA28"],
 };
 
 export default function SkillIcon({ skill }) {
-  const normalize = (value) =>
-    (value || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+  const normalize = (value) => (value || "").toLowerCase().replace(/[^a-z0-9]/g, "");
 
-  const iconData =
-    skillIcons[normalize(skill.name)] || skillIcons[normalize(skill.icon)];
+  const iconData = skillIcons[normalize(skill.name)] || skillIcons[normalize(skill.icon)];
 
   if (!iconData) {
     return (
