@@ -5,16 +5,7 @@
  */
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import {
-  ArrowUpRight,
-  Github,
-  Linkedin,
-  Mail,
-  Menu,
-  Moon,
-  Sun,
-  X,
-} from "lucide-react";
+import { ArrowUpRight, Github, Linkedin, Mail, Menu, Moon, Sun, X } from "lucide-react";
 import { configured } from "../lib/supabase.js";
 
 export const initials = (name = "") =>
@@ -41,7 +32,8 @@ export function ThemeButton() {
       type="button"
       className="theme-button"
       aria-label={light ? "Switch to dark mode" : "Switch to light mode"}
-      onClick={() => setLight((v) => !v)}>
+      onClick={() => setLight((v) => !v)}
+    >
       {light ? <Moon size={18} /> : <Sun size={18} />}
     </button>
   );
@@ -64,9 +56,19 @@ export function SiteHeader({ profile }) {
     <header className="site-header">
       <div className="site-header-inner container-max flex items-center justify-between">
         <Link to="/" className="wordmark" aria-label="Home">
-          <span className="logo-mark">
-            AH<span>.</span>
-          </span>
+          <img
+            src="/awal-jan-logo.png"
+            alt="Awal Jan Hematyar Logo"
+            width="44"
+            height="44"
+            style={{
+              width: "44px",
+              height: "44px",
+              objectFit: "contain",
+              borderRadius: "8px",
+              display: "block",
+            }}
+          />
           <span className="wordmark-caption">
             DEVELOPER
             <br />
@@ -75,7 +77,8 @@ export function SiteHeader({ profile }) {
         </Link>
         <nav
           className={`header-nav ${menu ? "is-open" : ""}`}
-          aria-label="Main navigation">
+          aria-label="Main navigation"
+        >
           {links.map(([label, href]) => (
             <a href={`/${href}`} key={href} onClick={() => setMenu(false)}>
               {label}
@@ -90,7 +93,8 @@ export function SiteHeader({ profile }) {
           <button
             className="mobile-toggle"
             onClick={() => setMenu(!menu)}
-            aria-label={menu ? "Close menu" : "Open menu"}>
+            aria-label={menu ? "Close menu" : "Open menu"}
+          >
             {menu ? <X /> : <Menu />}
           </button>
         </div>
@@ -103,9 +107,19 @@ export function SiteFooter({ profile, settings }) {
     <footer className="footer">
       <div className="container-max footer-main">
         <div>
-          <span className="logo-mark">
-            AH<span>.</span>
-          </span>
+          <img
+            src="/awal-jan-logo.png"
+            alt="Awal Jan Hematyar"
+            width="44"
+            height="44"
+            style={{
+              width: "44px",
+              height: "44px",
+              objectFit: "contain",
+              borderRadius: "8px",
+              display: "block",
+            }}
+          />
           <p>Building interfaces that feel as good as they function.</p>
         </div>
         <div className="footer-right flex">
@@ -113,7 +127,8 @@ export function SiteFooter({ profile, settings }) {
             href={profile?.linkedin_url || "#contact"}
             target={profile?.linkedin_url ? "_blank" : undefined}
             rel="noreferrer"
-            aria-label="LinkedIn">
+            aria-label="LinkedIn"
+          >
             <Linkedin size={19} />
           </a>
           {profile?.github_url && (
@@ -121,7 +136,8 @@ export function SiteFooter({ profile, settings }) {
               href={profile.github_url}
               target="_blank"
               rel="noreferrer"
-              aria-label="GitHub">
+              aria-label="GitHub"
+            >
               <Github size={19} />
             </a>
           )}
@@ -132,8 +148,8 @@ export function SiteFooter({ profile, settings }) {
       </div>
       <div className="container-max footer-bottom">
         <span>
-          © {new Date().getFullYear()} {profile?.full_name || "Portfolio"}. All
-          rights reserved.
+          © {new Date().getFullYear()} {profile?.full_name || "Portfolio"}. All rights
+          reserved.
         </span>
         <span>{settings?.footer_note || "Made with intention."}</span>
       </div>
@@ -159,8 +175,8 @@ export function PreviewBanner() {
   return !configured ? (
     <div className="preview-banner">
       <span className="tiny-dot" />
-      Preview mode — connect Supabase to publish content and enable admin,
-      comments and contact forms. <a href="/admin/login">Setup details</a>
+      Preview mode — connect Supabase to publish content and enable admin, comments and
+      contact forms. <a href="/admin/login">Setup details</a>
     </div>
   ) : null;
 }
