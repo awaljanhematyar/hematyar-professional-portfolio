@@ -31,6 +31,7 @@ import {
   initials,
 } from "../components/SiteChrome.jsx";
 import { configured } from "../lib/supabase.js";
+import { includeAtelierNorth } from "../data/atelierNorth.js";
 
 /** Show a readable month/year for dates stored in the database. */
 const dateLabel = (s) => {
@@ -216,7 +217,7 @@ function PortfolioBody({ data }) {
   const {
     profile: p,
     skills = [],
-    projects = [],
+    projects: publishedProjects = [],
     experience = [],
     education = [],
     certificates = [],
@@ -224,6 +225,7 @@ function PortfolioBody({ data }) {
     comments = [],
     site_settings: settings,
   } = data;
+  const projects = includeAtelierNorth(publishedProjects);
   const topSkills = skills.slice(0, 8);
   const categories = [...new Set(skills.map((x) => x.category || "Other"))];
   return (
@@ -664,7 +666,7 @@ export function ProjectDetails() {
     window.scrollTo(0, 0);
   }, [slug]);
   if (loading) return <div className="status-screen">Loading project…</div>;
-  const project = data?.projects?.find((p) => p.slug === slug);
+  const project = includeAtelierNorth(data?.projects).find((p) => p.slug === slug);
   if (error || !project)
     return (
       <div className="status-screen">

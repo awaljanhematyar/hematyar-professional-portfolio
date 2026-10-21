@@ -193,3 +193,18 @@ Dark navy + soft lime, editorial typography, two-tone atmospheric hero, curated 
 
 This archive is a readability-focused refactor. It excludes `.env.local` even though the uploaded backup contained it. React/Supabase behavior has not been fully regression-tested after the refactor. Run `npm install`, `npm run build`, and a real UI smoke test before deploying.
 # hematyar-professional-portfolio
+
+## Atelier North Interiors case study
+
+The existing Projects section and detail route include **Atelier North Interiors**, a fictional interior design portfolio demonstration.
+
+- [Live Demo](https://atelier-north-interiors.vercel.app)
+- [GitHub Repository](https://github.com/awaljanhematyar/atelier-north-interiors)
+- Stack: React, Vite, Tailwind CSS and React Router.
+- Cover: `public/projects/atelier-north-interiors.webp`, derived from an actual live-site browser screenshot.
+
+`src/data/atelierNorth.js` adds this source-managed case study alongside the existing published CMS projects without changing their records or order. If the CMS publishes the same slug, its record takes priority and the entry is not duplicated. Existing design, administration, Supabase configuration and other portfolio sections are preserved; no database migration or credential change is needed.
+
+Run the integration regression checks with `node --test src/data/atelierNorth.test.mjs`, the existing `npm run check`, and `npm run build`.
+
+The studio, its concepts and testimonials are clearly fictional; its forms do not deliver messages or book appointments. Incorporated reference-photo licensing is documented in the [Atelier North image credits](https://github.com/awaljanhematyar/atelier-north-interiors/blob/main/IMAGE_CREDITS.md).
