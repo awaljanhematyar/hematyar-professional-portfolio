@@ -1,12 +1,16 @@
-# Awal Jan Hematyar — Professional Developer Portfolio
+# Awal Jan Hematyar | Professional Developer Portfolio
 
 A **React + Tailwind CSS + Supabase** developer portfolio and content management system. Designed for long-term use, with a public-facing site, authenticated admin dashboard, Supabase PostgreSQL, Storage, moderated comments, and private contact messages.
 
-> **Setup status:** The user has already configured a Supabase project locally. This ZIP does not contain the local `.env.local` or any live database data. Production build/deployment and external service integration were **not verified** in this cleanup. See the setup and test steps below.
+[View portfolio](https://hematyar-professional-portfolio.vercel.app/) · [GitHub profile](https://github.com/awaljanhematyar)
 
-## Project origin and accuracy
+## Case study
 
-The old portfolio URL `https://awal-jan-hematyar-portfolio.vercel.app/` was **not accessible** during preparation. An independent public résumé, `https://aslicv.com/awaljanhematyar`, provided the candidate name, education, internship, skills, and certificates used for **preview mode**. Please verify every detail before publishing. No fabricated projects or clients were added; projects initially display an intentional empty state. Contact details are in the preview only because they are already public on that résumé.
+This project brings developer branding, project case studies and content administration into one React application. The public site presents skills and work, while an authenticated admin workflow manages published content, feedback and contact messages through Supabase.
+
+The implementation demonstrates reusable UI, responsive layouts, theme persistence, relational content, storage uploads and database-backed permissions. Service configuration and production security checks remain separate from this documentation review. No new runtime or integration verification is claimed.
+
+Preview content is separate from live Supabase records. A newly configured database starts empty, and public content must be reviewed and published through the admin workflow.
 
 ## Start reading the code
 
@@ -39,8 +43,9 @@ The old portfolio URL `https://awal-jan-hematyar-portfolio.vercel.app/` was **no
 In **Windows PowerShell**:
 
 ```powershell
-cd "C:\path\to\hematyar-portfolio"
-npm install
+git clone https://github.com/awaljanhematyar/hematyar-professional-portfolio.git
+cd hematyar-professional-portfolio
+npm ci
 npm run dev
 ```
 
@@ -189,10 +194,9 @@ supabase/
 
 Dark navy + soft lime, editorial typography, two-tone atmospheric hero, curated section hierarchy, quiet motion and minimal visual clutter. Theme defaults to dark for first-time visitors and remembers an explicit light/dark choice. The admin uses the same design tokens as the public site.
 
-## Cleanup notice
+## Verification scope
 
-This archive is a readability-focused refactor. It excludes `.env.local` even though the uploaded backup contained it. React/Supabase behavior has not been fully regression-tested after the refactor. Run `npm install`, `npm run build`, and a real UI smoke test before deploying.
-# hematyar-professional-portfolio
+This README update changes documentation only. Keep local environment files out of Git. Run the existing checks and a UI smoke test after application changes, and complete the production checklist above after configuring Supabase and email delivery.
 
 ## Atelier North Interiors case study
 
