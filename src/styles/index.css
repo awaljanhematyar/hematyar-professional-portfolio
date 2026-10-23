@@ -2249,3 +2249,14 @@ h1 i {
     height: 260px;
   }
 }
+
+/* WordCraft case study only. Existing projects keep their current styles. */
+.wordcraft-case-study { margin-top: 2.5rem; min-width: 0; overflow-wrap: anywhere; }
+.wordcraft-case-study h2 { margin-top: 2rem; }
+.wordcraft-case-study ul { padding-left: 1.25rem; }
+.wordcraft-case-study li { margin-bottom: .75rem; line-height: 1.7; }
+.wordcraft-captures { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem; margin-top: 2rem; }
+.wordcraft-captures figure { margin: 0; min-width: 0; }
+.wordcraft-captures img { display: block; width: 100%; height: auto; border-radius: 1rem; }
+.wordcraft-captures figcaption { margin-top: .75rem; font-size: .875rem; line-height: 1.6; }
+@media (max-width: 640px) { .wordcraft-captures { grid-template-columns: minmax(0, 1fr); } }
