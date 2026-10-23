@@ -1,5 +1,7 @@
 // Source-managed demonstration. A published CMS record with this slug wins.
 // Production URL verified in the authenticated publication workflow.
+import { includeDewaBiryani } from "./dewaBiryani.js";
+
 export const wordcraft = {
   id: "case-study-wordcraft",
   slug: "wordcraft",
@@ -15,8 +17,10 @@ export const wordcraft = {
   published: true,
 };
 export function includeWordCraft(projects = []) {
-  const existing = Array.isArray(projects) ? projects : [];
-  return existing.some(project => project.slug === wordcraft.slug) ? existing : [...existing, wordcraft];
+  const existing = includeDewaBiryani(Array.isArray(projects) ? projects : []);
+  return existing.some((project) => project.slug === wordcraft.slug)
+    ? existing
+    : [...existing, wordcraft];
 }
 export const wordcraftFeatures = [
   "Daily: one shared puzzle per UTC day using an immutable versioned schedule.",
@@ -33,3 +37,4 @@ export const wordcraftChallenges = [
   ["Input during animation", "Both keyboards use one submission path with an animation lock and filtering for dialogs, editable controls and browser shortcuts."],
   ["Rendering overhead", "Comparison-before-write DOM updates and reserved board geometry reduced observed mutation records and layout shifts."],
 ];
+
