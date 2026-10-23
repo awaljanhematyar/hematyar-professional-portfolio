@@ -33,6 +33,8 @@ import {
 import { configured } from "../lib/supabase.js";
 import { includeAtelierNorth } from "../data/atelierNorth.js";
 import { includeElevate } from "../data/elevate.js";
+import { includeWordCraft } from "../data/wordcraft.js";
+import WordCraftCaseStudy from "../components/WordCraftCaseStudy.jsx";
 
 /** Show a readable month/year for dates stored in the database. */
 const dateLabel = (s) => {
@@ -226,7 +228,7 @@ function PortfolioBody({ data }) {
     comments = [],
     site_settings: settings,
   } = data;
-  const projects = includeElevate(includeAtelierNorth(publishedProjects));
+  const projects = includeWordCraft(includeElevate(includeAtelierNorth(publishedProjects)));
   const topSkills = skills.slice(0, 8);
   const categories = [...new Set(skills.map((x) => x.category || "Other"))];
   return (
@@ -667,7 +669,7 @@ export function ProjectDetails() {
     window.scrollTo(0, 0);
   }, [slug]);
   if (loading) return <div className="status-screen">Loading project…</div>;
-  const project = includeElevate(includeAtelierNorth(data?.projects)).find((p) => p.slug === slug);
+  const project = includeWordCraft(includeElevate(includeAtelierNorth(data?.projects))).find((p) => p.slug === slug);
   if (error || !project)
     return (
       <div className="status-screen">
@@ -744,6 +746,7 @@ export function ProjectDetails() {
               <span key={t}>{t}</span>
             ))}
           </div>
+          {project.slug === "wordcraft" && <WordCraftCaseStudy />}
         </div>
       </main>
       <SiteFooter profile={data.profile} settings={data.site_settings} />
